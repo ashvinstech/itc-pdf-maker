@@ -1,0 +1,509 @@
+[
+  {
+    "name": "Test User",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Test Co",
+    "collectionId": "gid://shopify/Collection/361186132135",
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-361186132135-1777152130-1.pdf?v=1777152137"
+    ],
+    "timestamp": 1777152141506
+  },
+  {
+    "name": "Test User",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Test Co",
+    "collectionId": "gid://shopify/Collection/361186099367",
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-361186099367-1777152313-1.pdf?v=1777152325"
+    ],
+    "timestamp": 1777152329640
+  },
+  {
+    "name": "Test User",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Test Co",
+    "brand_tag": "xyz_brand",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/361186099367",
+        "collectionName": "Home page",
+        "pdfUrls": [
+          "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-361186099367-xyz_brand-1777152703-1.pdf?v=1777152712"
+        ]
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186132135",
+        "collectionName": "Automated Collection",
+        "pdfUrls": [
+          "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-361186132135-xyz_brand-1777152703-1.pdf?v=1777152720"
+        ]
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186164903",
+        "collectionName": "Hydrogen",
+        "pdfUrls": [
+          "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-361186164903-xyz_brand-1777152703-1.pdf?v=1777152725"
+        ]
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-361186099367-xyz_brand-1777152703-1.pdf?v=1777152712",
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-361186132135-xyz_brand-1777152703-1.pdf?v=1777152720",
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-361186164903-xyz_brand-1777152703-1.pdf?v=1777152725"
+    ],
+    "timestamp": 1777152730774
+  },
+  {
+    "name": "Test User",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Test Co",
+    "brand_tag": "xyz_brand",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/361186099367",
+        "collectionName": "Home page",
+        "count": 15
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186132135",
+        "collectionName": "Automated Collection",
+        "count": 8
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186164903",
+        "collectionName": "Hydrogen",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-xyz_brand-1777153755-1.pdf?v=1777153763"
+    ],
+    "timestamp": 1777153768633
+  },
+  {
+    "name": "Test User",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Test Co",
+    "brand_tag": "xyz_brand",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/361186099367",
+        "collectionName": "Home page",
+        "count": 15
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186132135",
+        "collectionName": "Automated Collection",
+        "count": 8
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186164903",
+        "collectionName": "Hydrogen",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-xyz_brand-1777154024-1.pdf?v=1777154031"
+    ],
+    "timestamp": 1777154035991
+  },
+  {
+    "name": "Test User",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Test Co",
+    "brand_tag": "xyz_brand",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/361186099367",
+        "collectionName": "Home page",
+        "count": 15
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186132135",
+        "collectionName": "Automated Collection",
+        "count": 8
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186164903",
+        "collectionName": "Hydrogen",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-xyz_brand-1777154297-1.pdf?v=1777154303"
+    ],
+    "timestamp": 1777154307640
+  },
+  {
+    "name": "Test User",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Test Co",
+    "brand_tag": "xyz_brand",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/361186099367",
+        "collectionName": "Home page",
+        "count": 15
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186132135",
+        "collectionName": "Automated Collection",
+        "count": 8
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186164903",
+        "collectionName": "Hydrogen",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-xyz_brand-1777154801-1.pdf?v=1777154808"
+    ],
+    "timestamp": 1777154813031
+  },
+  {
+    "name": "Test User",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Test Co",
+    "brand_tag": "xyz_brand",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/361186099367",
+        "collectionName": "Home page",
+        "count": 15
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186132135",
+        "collectionName": "Automated Collection",
+        "count": 8
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186164903",
+        "collectionName": "Hydrogen",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-xyz_brand-1777154883-1.pdf?v=1777154891"
+    ],
+    "timestamp": 1777154895916
+  },
+  {
+    "name": "Test User",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Test Co",
+    "brand_tag": "xyz_brand",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/361186099367",
+        "collectionName": "Home page",
+        "count": 15
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186132135",
+        "collectionName": "Automated Collection",
+        "count": 8
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186164903",
+        "collectionName": "Hydrogen",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-xyz_brand-1777155014-1.pdf?v=1777155020"
+    ],
+    "timestamp": 1777155025426
+  },
+  {
+    "name": "Test User",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Test Co",
+    "brand_tag": "xyz_brand",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/361186099367",
+        "collectionName": "Home page",
+        "count": 15
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186132135",
+        "collectionName": "Automated Collection",
+        "count": 8
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186164903",
+        "collectionName": "Hydrogen",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-xyz_brand-1777155114-1.pdf?v=1777155122"
+    ],
+    "timestamp": 1777155126877
+  },
+  {
+    "name": "Test User",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Test Co",
+    "brand_tag": "xyz_brand",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/361186099367",
+        "collectionName": "Home page",
+        "count": 15
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186132135",
+        "collectionName": "Automated Collection",
+        "count": 8
+      },
+      {
+        "collectionId": "gid://shopify/Collection/361186164903",
+        "collectionName": "Hydrogen",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0750/4320/9383/files/catalog-xyz_brand-1777155388-1.pdf?v=1777155395"
+    ],
+    "timestamp": 1777155398894
+  },
+  {
+    "name": "Ashvin",
+    "email": "ashvinstech@gmail.com",
+    "phone": "1234567890",
+    "company": "Ashvin",
+    "brand_tag": "Aashirvaad",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/504916574508",
+        "collectionName": "Beverages",
+        "count": 3
+      },
+      {
+        "collectionId": "gid://shopify/Collection/504916771116",
+        "collectionName": "Ghee",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0968/1557/9436/files/catalog-aashirvaad-1778755111-1.pdf?v=1778755118"
+    ],
+    "shop": "da2ajw-u1.myshopify.com",
+    "source": "storefront_public",
+    "timestamp": 1778755123358
+  },
+  {
+    "name": "Ashvin",
+    "email": "ashvinstech@gmail.com",
+    "phone": "1234567890",
+    "company": "Ashvin",
+    "brand_tag": "Aashirvaad",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/504916574508",
+        "collectionName": "Beverages",
+        "count": 3
+      },
+      {
+        "collectionId": "gid://shopify/Collection/504916771116",
+        "collectionName": "Ghee",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0968/1557/9436/files/catalog-aashirvaad-1778755334-1.pdf?v=1778755341"
+    ],
+    "shop": "da2ajw-u1.myshopify.com",
+    "source": "storefront_public",
+    "timestamp": 1778755345643
+  },
+  {
+    "name": "Ashvin",
+    "email": "ashvinstech@gmail.com",
+    "phone": "1234567890",
+    "company": "Ashvin",
+    "brand_tag": "Aashirvaad",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/504916574508",
+        "collectionName": "Beverages",
+        "count": 3
+      },
+      {
+        "collectionId": "gid://shopify/Collection/504916771116",
+        "collectionName": "Ghee",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0968/1557/9436/files/catalog-aashirvaad-1778755336-1.pdf?v=1778755342"
+    ],
+    "shop": "da2ajw-u1.myshopify.com",
+    "source": "storefront_public",
+    "timestamp": 1778755346955
+  },
+  {
+    "name": "ashvin",
+    "email": "ashvinstech@gmail.com",
+    "phone": "1234567890",
+    "company": "jnsjnj",
+    "brand_tag": "Aashirvaad",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/504916574508",
+        "collectionName": "Beverages",
+        "count": 3
+      },
+      {
+        "collectionId": "gid://shopify/Collection/504916771116",
+        "collectionName": "Ghee",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0968/1557/9436/files/catalog-aashirvaad-1778755374-1.pdf?v=1778755380"
+    ],
+    "shop": "da2ajw-u1.myshopify.com",
+    "source": "storefront_public",
+    "timestamp": 1778755384978
+  },
+  {
+    "name": "Ashvin Bhagat",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Ashvins tech",
+    "brand_tag": "Aashirvaad",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/504916574508",
+        "collectionName": "Beverages",
+        "count": 3
+      },
+      {
+        "collectionId": "gid://shopify/Collection/504916771116",
+        "collectionName": "Ghee",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0968/1557/9436/files/catalog-aashirvaad-1778755638-1.pdf?v=1778755644"
+    ],
+    "shop": "da2ajw-u1.myshopify.com",
+    "source": "storefront_public",
+    "timestamp": 1778755648991
+  },
+  {
+    "name": "Ashvin Bhagat",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Ashvins tech",
+    "brand_tag": "Aashirvaad",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/504916574508",
+        "collectionName": "Beverages",
+        "count": 3
+      },
+      {
+        "collectionId": "gid://shopify/Collection/504916771116",
+        "collectionName": "Ghee",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0968/1557/9436/files/catalog-aashirvaad-1778755861-1.pdf?v=1778755867"
+    ],
+    "shop": "da2ajw-u1.myshopify.com",
+    "source": "storefront_public",
+    "timestamp": 1778755872945
+  },
+  {
+    "name": "Ashvin Bhagat",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "Ashvins tech",
+    "brand_tag": "Aashirvaad",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/504916574508",
+        "collectionName": "Beverages",
+        "count": 3
+      },
+      {
+        "collectionId": "gid://shopify/Collection/504916771116",
+        "collectionName": "Ghee",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0968/1557/9436/files/catalog-aashirvaad-1778755982-1.pdf?v=1778755989"
+    ],
+    "shop": "da2ajw-u1.myshopify.com",
+    "source": "storefront_public",
+    "timestamp": 1778755994119
+  },
+  {
+    "name": "Ashvin Bhagat",
+    "email": "ashvinstech@gmail.com",
+    "phone": "8720853911",
+    "company": "",
+    "brand_tag": "Aashirvaad",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/504916574508",
+        "collectionName": "Beverages",
+        "count": 3
+      },
+      {
+        "collectionId": "gid://shopify/Collection/504916771116",
+        "collectionName": "Ghee",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0968/1557/9436/files/catalog-aashirvaad-1778756161-1.pdf?v=1778756167"
+    ],
+    "shop": "da2ajw-u1.myshopify.com",
+    "source": "storefront_public",
+    "timestamp": 1778756171540
+  },
+  {
+    "name": "Ashvin",
+    "email": "ashvinstech@gmail.com",
+    "phone": "1234567890",
+    "company": "XYZ",
+    "brand_tag": "Aashirvaad",
+    "grouped": [
+      {
+        "collectionId": "gid://shopify/Collection/504916574508",
+        "collectionName": "Beverages",
+        "count": 3
+      },
+      {
+        "collectionId": "gid://shopify/Collection/504916771116",
+        "collectionName": "Ghee",
+        "count": 3
+      }
+    ],
+    "pdfUrls": [
+      "https://cdn.shopify.com/s/files/1/0968/1557/9436/files/catalog-aashirvaad-1778756348-1.pdf?v=1778756354"
+    ],
+    "shop": "da2ajw-u1.myshopify.com",
+    "source": "storefront_public",
+    "timestamp": 1778756358952
+  }
+]
