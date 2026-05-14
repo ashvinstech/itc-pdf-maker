@@ -1,4 +1,15 @@
-const puppeteer = require('puppeteer');
+const path = require('path');
+
+function getPuppeteer() {
+  try {
+    return require('puppeteer');
+  } catch (e) {
+    const fallback = path.join(process.cwd(), 'node_modules', 'puppeteer');
+    return require(fallback);
+  }
+}
+
+const puppeteer = getPuppeteer();
 
 async function renderPdfBuffer({ html }) {
   const browser = await puppeteer.launch({
