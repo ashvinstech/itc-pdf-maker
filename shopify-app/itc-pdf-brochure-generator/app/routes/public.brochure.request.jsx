@@ -205,7 +205,7 @@ function validateLeadFields({ name, email, phone, brandTag }) {
   return null;
 }
 
-export async function action({ request }) {
+export async function loader({ request }) {
   if (request.method === "OPTIONS") {
     const origin = request.headers.get("Origin") || "";
     const preflightShop = shopFromOrigin(origin);
@@ -231,6 +231,13 @@ export async function action({ request }) {
     });
   }
 
+  return new Response("Method Not Allowed", {
+    status: 405,
+    headers: { Allow: "POST, OPTIONS" },
+  });
+}
+
+export async function action({ request }) {
   if (request.method !== "POST") {
     return new Response("Method Not Allowed", {
       status: 405,
