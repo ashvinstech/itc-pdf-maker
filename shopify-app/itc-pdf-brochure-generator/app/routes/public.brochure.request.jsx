@@ -53,14 +53,34 @@ function assertShopAllowed(shop) {
   }
 }
 
-function corsHeadersForShop(shop) {
-  const origin = shop ? `https://${shop}` : "";
+function shopFromOrigin(origin) {
+  if (typeof origin !== "string" || !origin) return "";
+  try {
+    const u = new URL(origin);
+    const host = (u.hostname || "").toLowerCase();
+    return normalizeShop(host);
+  } catch {
+    return "";
+  }
+}
+
+function corsHeadersForOrigin(origin) {
   return {
-    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Origin": origin || "",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Max-Age": "86400",
+    Vary: "Origin",
   };
+}
+
+function corsHeadersForRequest(request, shop) {
+  const origin = request.headers.get("Origin") || "";
+  const originShop = shopFromOrigin(origin);
+  if (origin && originShop && originShop === shop) {
+    return corsHeadersForOrigin(origin);
+  }
+  return corsHeadersForOrigin(shop ? `https://${shop}` : "");
 }
 
 function safeFilenamePart(value) {
@@ -187,20 +207,27 @@ function validateLeadFields({ name, email, phone, brandTag }) {
 
 export async function action({ request }) {
   if (request.method === "OPTIONS") {
-    const url = new URL(request.url);
-    const preflightShop = normalizeShop(url.searchParams.get("shop"));
+    const origin = request.headers.get("Origin") || "";
+    const preflightShop = shopFromOrigin(origin);
     if (!preflightShop) {
-      return new Response(null, { status: 204 });
+      return new Response(null, { status: 204, headers: corsHeadersForOrigin("") });
     }
+
     try {
       assertShopAllowed(preflightShop);
     } catch (e) {
-      if (e instanceof Response) return e;
+      if (e instanceof Response) {
+        return new Response(await e.text(), {
+          status: e.status,
+          headers: { ...corsHeadersForOrigin(origin), ...Object.fromEntries(e.headers) },
+        });
+      }
       throw e;
     }
+
     return new Response(null, {
       status: 204,
-      headers: corsHeadersForShop(preflightShop),
+      headers: corsHeadersForOrigin(origin),
     });
   }
 
@@ -222,12 +249,17 @@ export async function action({ request }) {
     return new Response("Missing or invalid shop", { status: 400 });
   }
 
-  const corsHeaders = corsHeadersForShop(shop);
+  const corsHeaders = corsHeadersForRequest(request, shop);
 
   try {
     assertShopAllowed(shop);
   } catch (e) {
-    if (e instanceof Response) return e;
+    if (e instanceof Response) {
+      return new Response(await e.text(), {
+        status: e.status,
+        headers: { ...corsHeaders, ...Object.fromEntries(e.headers) },
+      });
+    }
     throw e;
   }
 
