@@ -164,6 +164,66 @@ async function fetchProductsByTag({ admin, tag }) {
   return out;
 }
 
+async function fetchCollectionProducts({ admin, collectionId }) {
+  const query = `#graphql
+    query CollectionProducts($id: ID!, $first: Int!, $after: String) {
+      collection(id: $id) {
+        title
+        products(first: $first, after: $after) {
+          pageInfo { hasNextPage endCursor }
+          edges {
+            node {
+              id
+              title
+              featuredImage { url altText }
+              variants(first: 1) {
+                edges {
+                  node {
+                    id
+                    price
+                    title
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const first = 250;
+  let after = null;
+  const out = [];
+  let collectionTitle = "";
+
+  while (true) {
+    const resp = await admin.graphql(query, {
+      variables: { id: collectionId, first, after },
+    });
+    const data = await resp.json();
+    collectionTitle = data?.data?.collection?.title || collectionTitle;
+
+    const edges = data?.data?.collection?.products?.edges || [];
+    for (const e of edges) out.push(e.node);
+
+    const pageInfo = data?.data?.collection?.products?.pageInfo;
+    if (!pageInfo?.hasNextPage) break;
+    after = pageInfo.endCursor;
+  }
+
+  return { products: out, collectionTitle };
+}
+
+function normalizeCollectionId(value) {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith("gid://")) return trimmed;
+  if (/^\d+$/.test(trimmed)) return `gid://shopify/Collection/${trimmed}`;
+  return trimmed;
+}
+
 function groupShopifyProductsByCollection(shopifyProducts) {
   const map = new Map();
 
@@ -197,8 +257,8 @@ function mapShopifyProductsToPdfProductsWithCategory(shopifyProducts, category) 
   });
 }
 
-function validateLeadFields({ name, email, phone, brandTag }) {
-  if (!brandTag) return "Missing brand_tag";
+function validateLeadFields({ name, email, phone, brandTag, collectionId }) {
+  if (!brandTag && !collectionId) return "Missing brand_tag or collectionId";
   if (!name) return "Missing name";
   if (!email) return "Missing email";
   if (!phone) return "Missing phone";
@@ -275,11 +335,20 @@ export async function action({ request }) {
   const phone = (form.get("phone") || "").toString().trim();
   const company = (form.get("company") || "").toString().trim();
   const brandTag = (form.get("brand_tag") || "").toString().trim();
+  const collectionId = normalizeCollectionId(
+    (form.get("collectionId") || form.get("collection_id") || "").toString(),
+  );
 
   const maxPerPageParam = Number(form.get("maxPerPage"));
   const maxPerPage = Number.isFinite(maxPerPageParam) && maxPerPageParam > 0 ? maxPerPageParam : 12;
 
-  const validationError = validateLeadFields({ name, email, phone, brandTag });
+  const validationError = validateLeadFields({
+    name,
+    email,
+    phone,
+    brandTag,
+    collectionId,
+  });
   if (validationError) {
     return new Response(validationError, { status: 400, headers: corsHeaders });
   }
@@ -303,43 +372,79 @@ export async function action({ request }) {
   }
   const { buildBrochureHtml, renderPdfBuffer } = getPdfModules();
 
-  const shopifyProducts = await fetchProductsByTag({ admin, tag: brandTag });
-  if (shopifyProducts.length === 0) {
-    return new Response("No products found for brand_tag", { status: 404, headers: corsHeaders });
-  }
-
-  const grouped = groupShopifyProductsByCollection(shopifyProducts);
-
   const orderedMapped = [];
   const groupsSummary = [];
-  for (const group of grouped) {
+  let coverTitle = "";
+  let filenameBase = "catalog";
+  let emailContextLabel = "";
+
+  if (collectionId) {
+    const { products, collectionTitle } = await fetchCollectionProducts({
+      admin,
+      collectionId,
+    });
+
     const mapped = mapShopifyProductsToPdfProductsWithCategory(
-      group.products,
-      group.collectionName,
+      products,
+      collectionTitle || "",
     );
-    if (!mapped.length) continue;
     orderedMapped.push(...mapped);
+
     groupsSummary.push({
-      collectionId: group.collectionId,
-      collectionName: group.collectionName,
+      collectionId,
+      collectionName: collectionTitle || collectionId,
       count: mapped.length,
     });
-  }
 
-  if (!orderedMapped.length) {
-    return new Response("No products found for brand_tag", { status: 404, headers: corsHeaders });
+    coverTitle = collectionTitle || "";
+    filenameBase = safeFilenamePart(collectionTitle || collectionId) || "collection";
+    emailContextLabel = `Collection: ${collectionTitle || collectionId}`;
+  } else {
+    const shopifyProducts = await fetchProductsByTag({ admin, tag: brandTag });
+    if (shopifyProducts.length === 0) {
+      return new Response("No products found for brand_tag", {
+        status: 404,
+        headers: corsHeaders,
+      });
+    }
+
+    const grouped = groupShopifyProductsByCollection(shopifyProducts);
+    for (const group of grouped) {
+      const mapped = mapShopifyProductsToPdfProductsWithCategory(
+        group.products,
+        group.collectionName,
+      );
+      if (!mapped.length) continue;
+      orderedMapped.push(...mapped);
+      groupsSummary.push({
+        collectionId: group.collectionId,
+        collectionName: group.collectionName,
+        count: mapped.length,
+      });
+    }
+
+    if (!orderedMapped.length) {
+      return new Response("No products found for brand_tag", {
+        status: 404,
+        headers: corsHeaders,
+      });
+    }
+
+    coverTitle = brandTag;
+    filenameBase = safeFilenamePart(brandTag) || "brand";
+    emailContextLabel = `Brand tag: ${brandTag}`;
   }
 
   const chunks = chunkArray(orderedMapped, 100);
   const pdfUrls = [];
   const timestamp = Math.floor(Date.now() / 1000);
-  const tagPart = safeFilenamePart(brandTag) || "brand";
+  const tagPart = filenameBase;
 
   for (let i = 0; i < chunks.length; i++) {
     const pdfHtml = buildBrochureHtml({
       products: chunks[i],
       maxPerPage,
-      coverTitle: i === 0 ? brandTag : "",
+      coverTitle: i === 0 ? coverTitle : "",
     });
     const pdfBuffer = await renderPdfBuffer({ html: pdfHtml });
     const filename = `catalog-${tagPart}-${timestamp}-${i + 1}.pdf`;
@@ -355,7 +460,7 @@ export async function action({ request }) {
     await sendCatalogEmail({
       to: email,
       name,
-      collectionName: `Brand tag: ${brandTag}`,
+      collectionName: emailContextLabel,
       pdfUrls,
     });
   } catch (emailErr) {
@@ -368,6 +473,7 @@ export async function action({ request }) {
     phone,
     company,
     brand_tag: brandTag,
+    collectionId,
     grouped: groupsSummary,
     pdfUrls,
     shop,
