@@ -5,7 +5,11 @@ function getChromium() {
     return require('@sparticuz/chromium');
   } catch (e) {
     const fallback = path.join(process.cwd(), 'node_modules', '@sparticuz', 'chromium');
-    return require(fallback);
+    try {
+      return require(fallback);
+    } catch {
+      return null;
+    }
   }
 }
 
@@ -32,19 +36,25 @@ const puppeteer = getPuppeteer();
 const chromium = getChromium();
 
 async function renderPdfBuffer({ html }) {
-  const executablePath =
-    typeof chromium.executablePath === 'function'
+  const envExecutablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+  const chromiumExecutablePath =
+    chromium && typeof chromium.executablePath === 'function'
       ? await chromium.executablePath()
       : undefined;
+
+  const executablePath = envExecutablePath || chromiumExecutablePath;
+
+  const launchArgs = [
+    ...(chromium && Array.isArray(chromium.args) ? chromium.args : []),
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+  ];
 
   const browser = await puppeteer.launch({
     executablePath,
     headless: 'new',
-    args: [
-      ...(Array.isArray(chromium.args) ? chromium.args : []),
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-    ],
+    args: launchArgs,
   });
 
   try {
