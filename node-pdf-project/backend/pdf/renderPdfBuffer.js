@@ -1,9 +1,50 @@
-const puppeteer = require('puppeteer');
+const path = require('path');
+
+function getChromium() {
+  try {
+    return require('@sparticuz/chromium');
+  } catch (e) {
+    const fallback = path.join(process.cwd(), 'node_modules', '@sparticuz', 'chromium');
+    return require(fallback);
+  }
+}
+
+function getPuppeteer() {
+  try {
+    return require('puppeteer-core');
+  } catch (e) {
+    const fallback = path.join(process.cwd(), 'node_modules', 'puppeteer-core');
+    try {
+      return require(fallback);
+    } catch {
+      // fall through
+    }
+  }
+  try {
+    return require('puppeteer');
+  } catch (e) {
+    const fallback = path.join(process.cwd(), 'node_modules', 'puppeteer');
+    return require(fallback);
+  }
+}
+
+const puppeteer = getPuppeteer();
+const chromium = getChromium();
 
 async function renderPdfBuffer({ html }) {
+  const executablePath =
+    typeof chromium.executablePath === 'function'
+      ? await chromium.executablePath()
+      : undefined;
+
   const browser = await puppeteer.launch({
+    executablePath,
     headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: [
+      ...(Array.isArray(chromium.args) ? chromium.args : []),
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+    ],
   });
 
   try {
