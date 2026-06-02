@@ -74,12 +74,35 @@ function corsHeadersForOrigin(origin) {
   };
 }
 
+function getAllowedOrigins() {
+  const allowedRaw = process.env.ALLOWED_STOREFRONT_SHOPS || "";
+  return allowedRaw
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+}
+
 function corsHeadersForRequest(request, shop) {
   const origin = request.headers.get("Origin") || "";
   const originShop = shopFromOrigin(origin);
+  const allowedOrigins = getAllowedOrigins();
+
+  // If origin matches the shop domain exactly
   if (origin && originShop && originShop === shop) {
     return corsHeadersForOrigin(origin);
   }
+
+  // If origin hostname is directly in allowlist (for custom domains like uat.itcgifting.com)
+  try {
+    const u = new URL(origin);
+    const hostname = u.hostname.toLowerCase();
+    if (allowedOrigins.includes(hostname)) {
+      return corsHeadersForOrigin(origin);
+    }
+  } catch {
+    // ignore invalid origin
+  }
+
   return corsHeadersForOrigin(shop ? `https://${shop}` : "");
 }
 
