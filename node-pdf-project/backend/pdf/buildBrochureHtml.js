@@ -199,7 +199,7 @@ function buildBrochureHtml({ products, maxPerPage, coverTitle }) {
           }
 
           .imgWrap {
-            height: 230px;
+            height: 245px;
             background: #f8fafc;
             display: flex;
             align-items: center;
