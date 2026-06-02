@@ -158,7 +158,7 @@ function buildBrochureHtml({ products, maxPerPage, coverTitle }) {
 
           .banner {
             width: 100%;
-            background: #16a34a;
+            background: #1d3f7b;
             border-radius: 12px;
             padding: 14px 18px;
           }
@@ -204,7 +204,7 @@ function buildBrochureHtml({ products, maxPerPage, coverTitle }) {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 8px;
+            padding: 0px;
           }
 
           .imgWrap img {

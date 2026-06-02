@@ -82,7 +82,7 @@ function mapShopifyProductsToPdfProducts(shopifyProducts) {
     return {
       id: p.id,
       name: p.title || "",
-      size: v?.title || "",
+      size: v?.title && !/default\s*title/i.test(v.title) ? v.title : "",
       price: v?.price ? Number(v.price) : "",
       image: optimizeImageUrl(p?.featuredImage?.url || ""),
       category: "",
@@ -96,7 +96,7 @@ function mapShopifyProductsToPdfProductsWithCategory(shopifyProducts, category) 
     return {
       id: p.id,
       name: p.title || "",
-      size: v?.title || "",
+      size: v?.title && !/default\s*title/i.test(v.title) ? v.title : "",
       price: v?.price ? Number(v.price) : "",
       image: optimizeImageUrl(p?.featuredImage?.url || ""),
       category: category || "",
