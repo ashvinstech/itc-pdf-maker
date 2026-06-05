@@ -6,6 +6,27 @@ const { renderPdfBuffer } = require('../pdf/renderPdfBuffer');
 
 const generatePdfRouter = express.Router();
 
+generatePdfRouter.post('/generate-pdf-debug', async (req, res) => {
+  try {
+    const productIds = Array.isArray(req.body?.products) ? req.body.products : [];
+    const selected = products.filter((p) => productIds.includes(p.id));
+    const logoUrl = req.body?.logoUrl || './assets/logo.png';
+    
+    const pdfHtml = await buildBrochureHtml({ 
+      products: selected.length ? selected : products.slice(0, 3), 
+      maxPerPage: 6, 
+      coverTitle: req.body?.coverTitle || 'TEST',
+      logoUrl 
+    });
+    
+    res.setHeader('Content-Type', 'text/html');
+    return res.status(200).send(pdfHtml);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Failed to generate HTML', details: err?.message || String(err) });
+  }
+});
+
 generatePdfRouter.post('/generate-pdf', async (req, res) => {
   try {
     const productIds = Array.isArray(req.body?.products) ? req.body.products : [];
@@ -21,7 +42,7 @@ generatePdfRouter.post('/generate-pdf', async (req, res) => {
     }
 
     const logoUrl = req.body?.logoUrl || './assets/logo.png';
-    const pdfHtml = buildBrochureHtml({ products: selected, maxPerPage: 6, logoUrl });
+    const pdfHtml = await buildBrochureHtml({ products: selected, maxPerPage: 6, logoUrl });
     const pdfBuffer = await renderPdfBuffer({ html: pdfHtml });
 
     res.setHeader('Content-Type', 'application/pdf');

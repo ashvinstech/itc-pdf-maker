@@ -17,6 +17,8 @@ export default function HomePage() {
   const [products, setProducts] = useState([]);
   const [selectedIds, setSelectedIds] = useState(() => new Set());
   const [categoryFilter, setCategoryFilter] = useState('All');
+  const [coverTitle, setCoverTitle] = useState('');
+  const [logoUrl, setLogoUrl] = useState('./assets/logo.png');
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -65,6 +67,38 @@ export default function HomePage() {
     setSelectedIds(new Set());
   }
 
+  async function previewHtml() {
+    if (selectedCount === 0) {
+      alert('Select at least 1 product');
+      return;
+    }
+    setBusy(true);
+    try {
+      const resp = await fetch(`${backendBaseUrl}/generate-pdf-debug`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          products: Array.from(selectedIds),
+          coverTitle: coverTitle || 'TEST PREVIEW',
+          logoUrl: logoUrl || undefined
+        })
+      });
+      if (!resp.ok) {
+        const msg = await resp.text();
+        throw new Error(msg || 'Failed to generate preview');
+      }
+      const html = await resp.text();
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank', 'noopener,noreferrer');
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    } catch (e) {
+      alert(`Preview failed. ${e?.message || ''}`);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function generateBrochure() {
     if (selectedCount === 0) {
       alert('Select at least 1 product');
@@ -76,7 +110,11 @@ export default function HomePage() {
       const resp = await fetch(`${backendBaseUrl}/generate-pdf`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ products: Array.from(selectedIds) })
+        body: JSON.stringify({ 
+        products: Array.from(selectedIds),
+        coverTitle: coverTitle || undefined,
+        logoUrl: logoUrl || undefined
+      })
       });
 
       if (!resp.ok) {
@@ -169,6 +207,29 @@ export default function HomePage() {
             <div className="sticky top-6 space-y-4">
               <GroupedPreview grouped={groupedSelected} selectedCount={selectedCount} />
 
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Cover Title</label>
+                  <input
+                    type="text"
+                    value={coverTitle}
+                    onChange={(e) => setCoverTitle(e.target.value)}
+                    placeholder="Category/Brand Name"
+                    className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Logo URL or Path</label>
+                  <input
+                    type="text"
+                    value={logoUrl}
+                    onChange={(e) => setLogoUrl(e.target.value)}
+                    placeholder="./assets/logo.png or https://..."
+                    className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm"
+                  />
+                </div>
+              </div>
+
               <button
                 type="button"
                 disabled={busy}
@@ -176,6 +237,15 @@ export default function HomePage() {
                 className="w-full h-11 rounded-xl bg-green-600 text-white font-extrabold hover:bg-green-700 disabled:opacity-60"
               >
                 {busy ? 'Generating…' : 'Generate Brochure'}
+              </button>
+
+              <button
+                type="button"
+                disabled={busy || selectedCount === 0}
+                onClick={previewHtml}
+                className="w-full h-10 rounded-xl border border-slate-300 bg-white text-slate-700 font-semibold hover:bg-slate-50 disabled:opacity-60"
+              >
+                Preview HTML (Debug)
               </button>
 
               <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">

@@ -1,6 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
+let sharp;
+try {
+  sharp = require('sharp');
+} catch {
+  sharp = null;
+}
+
 function getMimeType(ext) {
   const map = {
     '.png': 'image/png',
@@ -13,30 +20,48 @@ function getMimeType(ext) {
   return map[ext.toLowerCase()] || 'image/png';
 }
 
-function logoToDataUri(logoPathOrUrl) {
+async function logoToDataUri(logoPathOrUrl, maxWidth = 600) {
   if (!logoPathOrUrl) return null;
   const trimmed = String(logoPathOrUrl).trim();
   if (!trimmed) return null;
 
   // Already a URL (http/https/data)
   if (/^https?:\/\//.test(trimmed) || /^data:/.test(trimmed)) {
+    console.log('[logoToDataUri] Using URL directly:', trimmed.substring(0, 50) + '...');
     return trimmed;
   }
 
   // Local file path - try to read and convert to base64
   try {
     const resolved = path.resolve(trimmed);
+    console.log('[logoToDataUri] Resolving path:', trimmed, '->', resolved);
     if (!fs.existsSync(resolved)) {
-      console.warn('Logo file not found:', resolved);
+      console.warn('[logoToDataUri] Logo file not found:', resolved);
       return null;
     }
+    
     const ext = path.extname(resolved);
     const mime = getMimeType(ext);
-    const buffer = fs.readFileSync(resolved);
+    
+    // Resize image if sharp is available
+    let buffer;
+    if (sharp && mime !== 'image/svg+xml') {
+      console.log('[logoToDataUri] Resizing image to max width:', maxWidth);
+      buffer = await sharp(resolved)
+        .resize(maxWidth, null, { withoutEnlargement: true })
+        .png({ quality: 90 })
+        .toBuffer();
+      console.log('[logoToDataUri] Resized image size:', buffer.length, 'bytes');
+    } else {
+      buffer = fs.readFileSync(resolved);
+    }
+    
     const base64 = buffer.toString('base64');
-    return `data:${mime};base64,${base64}`;
+    const dataUri = `data:${mime === 'image/svg+xml' ? 'image/svg+xml' : 'image/png'};base64,${base64}`;
+    console.log('[logoToDataUri] Successfully created data URI, length:', dataUri.length);
+    return dataUri;
   } catch (err) {
-    console.error('Failed to read logo file:', err);
+    console.error('[logoToDataUri] Failed to read logo file:', err);
     return null;
   }
 }
@@ -75,13 +100,13 @@ function normalizeTitle(value) {
     .toLowerCase();
 }
 
-function buildCoverPage({ title, logoUrl }) {
+async function buildCoverPage({ title, logoUrl }) {
   const safe = String(title || '').trim();
   if (!safe) return '';
 
-  const resolvedLogo = logoToDataUri(logoUrl);
+  const resolvedLogo = await logoToDataUri(logoUrl, 600);
   const logoHtml = resolvedLogo
-    ? `<div class="coverLogo"><img src="${escapeHtml(resolvedLogo)}" alt="Logo" /></div>`
+    ? `<div class="coverLogo"><img src="${escapeHtml(resolvedLogo)}" alt="Logo" width="300" height="120" style="max-height:120px;max-width:300px;object-fit:contain;" /></div>`
     : '';
 
   return `
@@ -92,11 +117,11 @@ function buildCoverPage({ title, logoUrl }) {
   `;
 }
 
-function buildPage({ category, pageProducts, showTitle, logoUrl }) {
+async function buildPage({ category, pageProducts, showTitle, logoUrl }) {
   const isSingle = pageProducts.length === 1;
-  const resolvedLogo = logoToDataUri(logoUrl);
+  const resolvedLogo = await logoToDataUri(logoUrl, 400);
   const pageLogoHtml = resolvedLogo
-    ? `<div class="pageLogo"><img src="${escapeHtml(resolvedLogo)}" alt="Logo" /></div>`
+    ? `<div class="pageLogo"><img src="${escapeHtml(resolvedLogo)}" alt="Logo" width="200" height="60" style="max-height:60px;max-width:200px;object-fit:contain;" /></div>`
     : '';
 
   const productCards = pageProducts
@@ -139,12 +164,12 @@ function buildPage({ category, pageProducts, showTitle, logoUrl }) {
   `;
 }
 
-function buildBrochureHtml({ products, maxPerPage, coverTitle, logoUrl }) {
+async function buildBrochureHtml({ products, maxPerPage, coverTitle, logoUrl }) {
   const perPage = Number.isFinite(maxPerPage) && maxPerPage > 0 ? maxPerPage : 9;
   const grouped = groupByCategory(products);
   const categories = Object.keys(grouped).filter((c) => grouped[c]?.items?.length);
 
-  const pages = [];
+  const pagePromises = [];
   let previousTitle = null;
   for (const category of categories) {
     const chunks = chunkArray(grouped[category].items, perPage);
@@ -153,13 +178,14 @@ function buildBrochureHtml({ products, maxPerPage, coverTitle, logoUrl }) {
       const currentTitle = grouped[category].title;
       const showTitle = normalizeTitle(currentTitle) !== normalizeTitle(previousTitle);
       previousTitle = currentTitle;
-      pages.push(
+      pagePromises.push(
         buildPage({ category: currentTitle, pageProducts, showTitle, logoUrl })
       );
     }
   }
 
-  const cover = buildCoverPage({ title: coverTitle, logoUrl });
+  const pages = await Promise.all(pagePromises);
+  const cover = await buildCoverPage({ title: coverTitle, logoUrl });
   const allPages = cover ? [cover, ...pages] : pages;
 
   const body = allPages
