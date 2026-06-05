@@ -327,6 +327,7 @@ export async function action({ request }) {
     }
 
     const maxPerPage = typeof body?.maxPerPage === "number" ? body.maxPerPage : 12;
+    const logoUrl = typeof body?.logoUrl === "string" ? body.logoUrl.trim() : "";
 
     if (collectionId) {
       const shopifyProducts = await fetchCollectionProducts({ admin, collectionId });
@@ -473,6 +474,7 @@ export async function action({ request }) {
         products: chunks[i],
         maxPerPage,
         coverTitle: i === 0 ? brandTag : "",
+        logoUrl,
       });
       const pdfBuffer = await renderPdfBuffer({ html: pdfHtml });
       const filename = `catalog-${tagPart}-${timestamp}-${i + 1}.pdf`;

@@ -167,6 +167,7 @@ export async function action({ request }) {
 
   const maxPerPageParam = Number(form.get("maxPerPage"));
   const maxPerPage = Number.isFinite(maxPerPageParam) && maxPerPageParam > 0 ? maxPerPageParam : 12;
+  const logoUrl = (form.get("logoUrl") || "").toString().trim();
 
   const validationError = validateLeadFields({ name, email, phone, brandTag });
   if (validationError) {
@@ -210,6 +211,7 @@ export async function action({ request }) {
       products: chunks[i],
       maxPerPage,
       coverTitle: i === 0 ? brandTag : "",
+      logoUrl,
     });
     const pdfBuffer = await renderPdfBuffer({ html: pdfHtml });
     const filename = `catalog-${tagPart}-${timestamp}-${i + 1}.pdf`;

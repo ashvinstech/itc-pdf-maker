@@ -1,3 +1,46 @@
+const fs = require('fs');
+const path = require('path');
+
+function getMimeType(ext) {
+  const map = {
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.webp': 'image/webp',
+  };
+  return map[ext.toLowerCase()] || 'image/png';
+}
+
+function logoToDataUri(logoPathOrUrl) {
+  if (!logoPathOrUrl) return null;
+  const trimmed = String(logoPathOrUrl).trim();
+  if (!trimmed) return null;
+
+  // Already a URL (http/https/data)
+  if (/^https?:\/\//.test(trimmed) || /^data:/.test(trimmed)) {
+    return trimmed;
+  }
+
+  // Local file path - try to read and convert to base64
+  try {
+    const resolved = path.resolve(trimmed);
+    if (!fs.existsSync(resolved)) {
+      console.warn('Logo file not found:', resolved);
+      return null;
+    }
+    const ext = path.extname(resolved);
+    const mime = getMimeType(ext);
+    const buffer = fs.readFileSync(resolved);
+    const base64 = buffer.toString('base64');
+    return `data:${mime};base64,${base64}`;
+  } catch (err) {
+    console.error('Failed to read logo file:', err);
+    return null;
+  }
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -32,19 +75,29 @@ function normalizeTitle(value) {
     .toLowerCase();
 }
 
-function buildCoverPage({ title }) {
+function buildCoverPage({ title, logoUrl }) {
   const safe = String(title || '').trim();
   if (!safe) return '';
 
+  const resolvedLogo = logoToDataUri(logoUrl);
+  const logoHtml = resolvedLogo
+    ? `<div class="coverLogo"><img src="${escapeHtml(resolvedLogo)}" alt="Logo" /></div>`
+    : '';
+
   return `
     <section class="page coverPage">
+      ${logoHtml}
       <div class="coverTitle">${escapeHtml(safe)}</div>
     </section>
   `;
 }
 
-function buildPage({ category, pageProducts, showTitle }) {
+function buildPage({ category, pageProducts, showTitle, logoUrl }) {
   const isSingle = pageProducts.length === 1;
+  const resolvedLogo = logoToDataUri(logoUrl);
+  const pageLogoHtml = resolvedLogo
+    ? `<div class="pageLogo"><img src="${escapeHtml(resolvedLogo)}" alt="Logo" /></div>`
+    : '';
 
   const productCards = pageProducts
     .map((p) => {
@@ -68,6 +121,7 @@ function buildPage({ category, pageProducts, showTitle }) {
 
   return `
     <section class="page">
+      ${pageLogoHtml}
       ${
         showTitle
           ? `<div class="banner">
@@ -85,7 +139,7 @@ function buildPage({ category, pageProducts, showTitle }) {
   `;
 }
 
-function buildBrochureHtml({ products, maxPerPage, coverTitle }) {
+function buildBrochureHtml({ products, maxPerPage, coverTitle, logoUrl }) {
   const perPage = Number.isFinite(maxPerPage) && maxPerPage > 0 ? maxPerPage : 9;
   const grouped = groupByCategory(products);
   const categories = Object.keys(grouped).filter((c) => grouped[c]?.items?.length);
@@ -100,12 +154,12 @@ function buildBrochureHtml({ products, maxPerPage, coverTitle }) {
       const showTitle = normalizeTitle(currentTitle) !== normalizeTitle(previousTitle);
       previousTitle = currentTitle;
       pages.push(
-        buildPage({ category: currentTitle, pageProducts, showTitle })
+        buildPage({ category: currentTitle, pageProducts, showTitle, logoUrl })
       );
     }
   }
 
-  const cover = buildCoverPage({ title: coverTitle });
+  const cover = buildCoverPage({ title: coverTitle, logoUrl });
   const allPages = cover ? [cover, ...pages] : pages;
 
   const body = allPages
@@ -143,8 +197,20 @@ function buildBrochureHtml({ products, maxPerPage, coverTitle }) {
 
           .coverPage {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 24px;
+          }
+
+          .coverLogo {
+            margin-bottom: 8px;
+          }
+
+          .coverLogo img {
+            max-height: 120px;
+            max-width: 300px;
+            object-fit: contain;
           }
 
           .coverTitle {
@@ -169,6 +235,17 @@ function buildBrochureHtml({ products, maxPerPage, coverTitle }) {
             font-weight: 800;
             letter-spacing: 0.2px;
             text-transform: uppercase;
+          }
+
+          .pageLogo {
+            padding: 0 18px 12px 18px;
+            text-align: center;
+          }
+
+          .pageLogo img {
+            max-height: 60px;
+            max-width: 200px;
+            object-fit: contain;
           }
 
           .content {

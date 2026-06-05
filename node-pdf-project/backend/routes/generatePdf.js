@@ -20,7 +20,8 @@ generatePdfRouter.post('/generate-pdf', async (req, res) => {
       return res.status(404).json({ error: 'Selected products not found' });
     }
 
-    const pdfHtml = buildBrochureHtml({ products: selected, maxPerPage: 6 });
+    const logoUrl = req.body?.logoUrl || './assets/logo.png';
+    const pdfHtml = buildBrochureHtml({ products: selected, maxPerPage: 6, logoUrl });
     const pdfBuffer = await renderPdfBuffer({ html: pdfHtml });
 
     res.setHeader('Content-Type', 'application/pdf');
