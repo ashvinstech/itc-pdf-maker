@@ -304,7 +304,7 @@ async function buildBrochureHtml({ products, maxPerPage, coverTitle, logoUrl }) 
           }
 
           .imgWrap {
-            height: 245px;
+            height: 200px;
             background: #f8fafc;
             display: flex;
             align-items: center;
