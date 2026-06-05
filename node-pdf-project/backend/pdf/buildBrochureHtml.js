@@ -165,6 +165,7 @@ async function buildPage({ category, pageProducts, showTitle, logoUrl }) {
 }
 
 async function buildBrochureHtml({ products, maxPerPage, coverTitle, logoUrl }) {
+  const effectiveLogoUrl = logoUrl || './assets/logo.png';
   const perPage = Number.isFinite(maxPerPage) && maxPerPage > 0 ? maxPerPage : 9;
   const grouped = groupByCategory(products);
   const categories = Object.keys(grouped).filter((c) => grouped[c]?.items?.length);
@@ -179,13 +180,13 @@ async function buildBrochureHtml({ products, maxPerPage, coverTitle, logoUrl }) 
       const showTitle = normalizeTitle(currentTitle) !== normalizeTitle(previousTitle);
       previousTitle = currentTitle;
       pagePromises.push(
-        buildPage({ category: currentTitle, pageProducts, showTitle, logoUrl })
+        buildPage({ category: currentTitle, pageProducts, showTitle, logoUrl: effectiveLogoUrl })
       );
     }
   }
 
   const pages = await Promise.all(pagePromises);
-  const cover = await buildCoverPage({ title: coverTitle, logoUrl });
+  const cover = await buildCoverPage({ title: coverTitle, logoUrl: effectiveLogoUrl });
   const allPages = cover ? [cover, ...pages] : pages;
 
   const body = allPages

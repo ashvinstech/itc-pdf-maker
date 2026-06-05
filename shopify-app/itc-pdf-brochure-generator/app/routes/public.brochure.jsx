@@ -254,6 +254,7 @@ export async function loader({ request }) {
 
   const maxPerPageParam = Number(url.searchParams.get("maxPerPage"));
   const maxPerPage = Number.isFinite(maxPerPageParam) && maxPerPageParam > 0 ? maxPerPageParam : 12;
+  const logoUrl = (url.searchParams.get("logoUrl") || "").trim();
 
   if (!collectionId && !brandTag) {
     return new Response("Missing collectionId or brand_tag", { status: 400 });
@@ -284,6 +285,7 @@ export async function loader({ request }) {
     products: mapped,
     maxPerPage,
     coverTitle: brandTag ? brandTag : "",
+    logoUrl,
   });
   const pdfBuffer = await renderPdfBuffer({ html });
 

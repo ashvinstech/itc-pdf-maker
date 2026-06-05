@@ -208,6 +208,7 @@ export async function loader({ request }) {
   const brandTag = (url.searchParams.get("brand_tag") || "").trim();
   const maxPerPageParam = Number(url.searchParams.get("maxPerPage"));
   const maxPerPage = Number.isFinite(maxPerPageParam) && maxPerPageParam > 0 ? maxPerPageParam : 12;
+  const logoUrl = (url.searchParams.get("logoUrl") || "").trim();
 
   if (!collectionId && !brandTag) {
     return new Response("Missing collectionId or brand_tag", { status: 400 });
@@ -219,7 +220,7 @@ export async function loader({ request }) {
   if (collectionId) {
     const { products: shopifyProducts, collectionTitle } = await fetchCollectionProducts({ admin, collectionId });
     const mapped = mapShopifyProductsToPdfProductsWithCategory(shopifyProducts, collectionTitle || "");
-    const html = await buildBrochureHtml({ products: mapped, maxPerPage });
+    const html = await buildBrochureHtml({ products: mapped, maxPerPage, coverTitle: collectionTitle || "", logoUrl });
     pdfBuffer = await renderPdfBuffer({ html });
     filename = `brochure-${(collectionTitle || collectionId).split("/").pop()}.pdf`;
   } else {
@@ -240,6 +241,7 @@ export async function loader({ request }) {
       products: orderedMapped,
       maxPerPage,
       coverTitle: brandTag ? brandTag : "",
+      logoUrl,
     });
     pdfBuffer = await renderPdfBuffer({ html });
     filename = `brochure-${brandTag.replace(/[^a-z0-9-_]+/gi, "-")}.pdf`;

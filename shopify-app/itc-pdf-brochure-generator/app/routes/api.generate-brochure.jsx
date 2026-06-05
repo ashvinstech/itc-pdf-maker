@@ -356,7 +356,7 @@ export async function action({ request }) {
       }
 
       if (!email) {
-        const pdfHtml = await buildBrochureHtml({ products: mapped, maxPerPage });
+        const pdfHtml = await buildBrochureHtml({ products: mapped, maxPerPage, coverTitle: collectionTitle || "", logoUrl });
         const pdfBuffer = await renderPdfBuffer({ html: pdfHtml });
 
         return new Response(pdfBuffer, {
@@ -374,7 +374,7 @@ export async function action({ request }) {
 
       const pdfBuffers = [];
       for (const chunk of chunks) {
-        const pdfHtml = await buildBrochureHtml({ products: chunk, maxPerPage });
+        const pdfHtml = await buildBrochureHtml({ products: chunk, maxPerPage, coverTitle: collectionTitle || "", logoUrl });
         const pdfBuffer = await renderPdfBuffer({ html: pdfHtml });
         pdfBuffers.push(pdfBuffer);
       }
