@@ -165,7 +165,8 @@ async function buildPage({ category, pageProducts, showTitle, logoUrl }) {
 }
 
 async function buildBrochureHtml({ products, maxPerPage, coverTitle, logoUrl }) {
-  const effectiveLogoUrl = logoUrl || './assets/logo.png';
+  const defaultLogoPath = path.join(__dirname, '..', 'assets', 'logo.png');
+  const effectiveLogoUrl = logoUrl || defaultLogoPath;
   const perPage = Number.isFinite(maxPerPage) && maxPerPage > 0 ? maxPerPage : 9;
   const grouped = groupByCategory(products);
   const categories = Object.keys(grouped).filter((c) => grouped[c]?.items?.length);
