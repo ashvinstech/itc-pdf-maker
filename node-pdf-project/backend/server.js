@@ -21,6 +21,7 @@ app.get('/products', (req, res) => {
 app.use('/', generatePdfRouter);
 
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
+app.use('/pdfs', express.static(path.join(__dirname, 'public', 'pdfs')));
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 app.listen(port, () => {

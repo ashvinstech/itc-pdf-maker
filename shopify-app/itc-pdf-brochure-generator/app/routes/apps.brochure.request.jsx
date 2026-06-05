@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 import { authenticate } from "../shopify.server";
 import { sendCatalogEmail } from "../utils/email";
 import { appendLead } from "../utils/leads";
-import { uploadPdfToShopifyFiles } from "../utils/storage";
+import { savePdfLocally } from "../utils/storage";
 
 const require = createRequire(import.meta.url);
 
@@ -215,8 +215,7 @@ export async function action({ request }) {
     });
     const pdfBuffer = await renderPdfBuffer({ html: pdfHtml });
     const filename = `catalog-${tagPart}-${timestamp}-${i + 1}.pdf`;
-    const { url } = await uploadPdfToShopifyFiles({
-      admin,
+    const { url } = await savePdfLocally({
       buffer: pdfBuffer,
       filename,
     });

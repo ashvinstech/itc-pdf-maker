@@ -1,7 +1,26 @@
 import { randomUUID } from "node:crypto";
+import { writeFile, mkdir } from "node:fs/promises";
+import { join } from "node:path";
 
 async function sleep(ms) {
   await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export async function savePdfLocally({ buffer, filename }) {
+  const pdfDir = join(process.cwd(), "public", "pdfs");
+  await mkdir(pdfDir, { recursive: true });
+
+  const timestamp = Date.now();
+  const safeFilename = filename.replace(/[^a-zA-Z0-9.-]/g, "-");
+  const finalFilename = `${timestamp}-${safeFilename}`;
+  const filePath = join(pdfDir, finalFilename);
+
+  await writeFile(filePath, buffer);
+
+  const baseUrl = process.env.PDF_BASE_URL || "";
+  const publicUrl = `${baseUrl}/pdfs/${finalFilename}`;
+
+  return { url: publicUrl, filename: finalFilename };
 }
 
 async function fetchFileUrl({ admin, fileId }) {
