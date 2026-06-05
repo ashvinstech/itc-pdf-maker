@@ -190,10 +190,14 @@ async function buildBrochureHtml({ products, maxPerPage, coverTitle, logoUrl }) 
   const cover = await buildCoverPage({ title: coverTitle, logoUrl: effectiveLogoUrl });
   const allPages = cover ? [cover, ...pages] : pages;
 
+  const footerHtml = `<div class="pageFooter">For additional information, please contact us at NaveenE.R@itc.in.</div>`;
+
   const body = allPages
     .map((p, idx) => {
-      const needsBreak = idx < allPages.length - 1;
-      return `${p}${needsBreak ? '<div class="pageBreak"></div>' : ''}`;
+      const isLast = idx === allPages.length - 1;
+      const needsBreak = !isLast;
+      const pageContent = isLast ? `${p}${footerHtml}` : p;
+      return `${pageContent}${needsBreak ? '<div class="pageBreak"></div>' : ''}`;
     })
     .join('');
 
@@ -276,6 +280,14 @@ async function buildBrochureHtml({ products, maxPerPage, coverTitle, logoUrl }) 
             object-fit: contain;
           }
 
+          .pageFooter {
+            text-align: center;
+            font-size: 12px;
+            color: #64748b;
+            padding: 20px 18px 10px;
+            margin-top: auto;
+          }
+
           .content {
             padding-top: 12px;
           }
@@ -283,13 +295,13 @@ async function buildBrochureHtml({ products, maxPerPage, coverTitle, logoUrl }) 
           .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 15px;
             align-content: start;
           }
 
           .content.single .grid {
             grid-template-columns: 1fr;
-            max-width: 360px;
+            max-width: 320px;
             margin: 0 auto;
           }
 

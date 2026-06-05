@@ -118,7 +118,103 @@ const products = [
     size: '250 ml',
     price: 45,
     image: 'https://m.media-amazon.com/images/I/61wraOUsPEL._AC_UF350,350_QL80_.jpg'
-  }
+  },
+  {
+    id: 16,
+    name: 'Tender Coconut Water',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 28,
+    image: 'https://www.bbassets.com/media/uploads/p/xl/40297921_5-b-natural-select-tender-coconut-water-no-added-sugar.jpg'
+  },
+  {
+    id: 17,
+    name: 'Coconut Water (No Sugar)',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 30,
+    image: 'https://m.media-amazon.com/images/I/71eB6-hknyL.jpg'
+  },
+  {
+    id: 18,
+    name: 'Tender Coconut Water',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 28,
+    image: 'https://www.bbassets.com/media/uploads/p/xl/40297921_5-b-natural-select-tender-coconut-water-no-added-sugar.jpg'
+  },
+  {
+    id: 19,
+    name: 'Coconut Water (No Sugar)',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 30,
+    image: 'https://m.media-amazon.com/images/I/71eB6-hknyL.jpg'
+  }, 
+  {
+    id: 20,
+    name: 'Tender Coconut Water',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 28,
+    image: 'https://www.bbassets.com/media/uploads/p/xl/40297921_5-b-natural-select-tender-coconut-water-no-added-sugar.jpg'
+  },
+  {
+    id: 21,
+    name: 'Coconut Water (No Sugar)',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 30,
+    image: 'https://m.media-amazon.com/images/I/71eB6-hknyL.jpg'
+  },
+  {
+    id: 22,
+    name: 'Tender Coconut Water',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 28,
+    image: 'https://www.bbassets.com/media/uploads/p/xl/40297921_5-b-natural-select-tender-coconut-water-no-added-sugar.jpg'
+  },
+  {
+    id: 23,
+    name: 'Coconut Water (No Sugar)',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 30,
+    image: 'https://m.media-amazon.com/images/I/71eB6-hknyL.jpg'
+  },
+  {
+    id: 24,
+    name: 'Tender Coconut Water',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 28,
+    image: 'https://www.bbassets.com/media/uploads/p/xl/40297921_5-b-natural-select-tender-coconut-water-no-added-sugar.jpg'
+  },
+  {
+    id: 25,
+    name: 'Coconut Water (No Sugar)',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 30,
+    image: 'https://m.media-amazon.com/images/I/71eB6-hknyL.jpg'
+  },
+  {
+    id: 26,
+    name: 'Tender Coconut Water',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 28,
+    image: 'https://www.bbassets.com/media/uploads/p/xl/40297921_5-b-natural-select-tender-coconut-water-no-added-sugar.jpg'
+  },
+  {
+    id: 27,
+    name: 'Coconut Water (No Sugar)',
+    category: 'Coconut Water',
+    size: '200 ml',
+    price: 30,
+    image: 'https://m.media-amazon.com/images/I/71eB6-hknyL.jpg'
+  },
 ];
 
 module.exports = { products };
