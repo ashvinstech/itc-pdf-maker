@@ -464,7 +464,7 @@ export async function action({ request }) {
   const tagPart = filenameBase;
 
   for (let i = 0; i < chunks.length; i++) {
-    const pdfHtml = buildBrochureHtml({
+    const pdfHtml = await buildBrochureHtml({
       products: chunks[i],
       maxPerPage,
       coverTitle: i === 0 ? coverTitle : "",

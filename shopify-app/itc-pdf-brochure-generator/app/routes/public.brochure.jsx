@@ -280,7 +280,7 @@ export async function loader({ request }) {
     return new Response("No products found", { status: 404 });
   }
 
-  const html = buildBrochureHtml({
+  const html = await buildBrochureHtml({
     products: mapped,
     maxPerPage,
     coverTitle: brandTag ? brandTag : "",

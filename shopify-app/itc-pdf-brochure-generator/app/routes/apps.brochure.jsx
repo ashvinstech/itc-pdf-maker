@@ -219,7 +219,7 @@ export async function loader({ request }) {
   if (collectionId) {
     const { products: shopifyProducts, collectionTitle } = await fetchCollectionProducts({ admin, collectionId });
     const mapped = mapShopifyProductsToPdfProductsWithCategory(shopifyProducts, collectionTitle || "");
-    const html = buildBrochureHtml({ products: mapped, maxPerPage });
+    const html = await buildBrochureHtml({ products: mapped, maxPerPage });
     pdfBuffer = await renderPdfBuffer({ html });
     filename = `brochure-${(collectionTitle || collectionId).split("/").pop()}.pdf`;
   } else {
@@ -236,7 +236,7 @@ export async function loader({ request }) {
       return new Response("No products found", { status: 404 });
     }
 
-    const html = buildBrochureHtml({
+    const html = await buildBrochureHtml({
       products: orderedMapped,
       maxPerPage,
       coverTitle: brandTag ? brandTag : "",
