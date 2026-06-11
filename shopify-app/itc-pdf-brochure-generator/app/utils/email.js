@@ -17,12 +17,15 @@ export async function sendCatalogEmail({
 }) {
   const user = process.env.EMAIL_USER;
   const pass = process.env.EMAIL_PASS;
+  const fromEmail = process.env.FROM_EMAIL || "giftingcatalog@itcgifting.com";
 
   if (!user) throw new Error("Missing EMAIL_USER");
   if (!pass) throw new Error("Missing EMAIL_PASS");
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "email-smtp.ap-south-1.amazonaws.com",
+    port: 587,
+    secure: false,
     auth: {
       user,
       pass,
@@ -54,7 +57,7 @@ export async function sendCatalogEmail({
   `;
 
   await transporter.sendMail({
-    from: user,
+    from: fromEmail,
     to,
     subject: "Your Product Catalog",
     html,
