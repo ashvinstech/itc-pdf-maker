@@ -203,6 +203,8 @@ export async function action({ request }) {
 
   const chunks = chunkArray(orderedMapped, 100);
   const pdfUrls = [];
+  const pdfBuffers = [];
+  const pdfFilenames = [];
   const timestamp = Math.floor(Date.now() / 1000);
   const tagPart = safeFilenamePart(brandTag) || "brand";
 
@@ -220,6 +222,8 @@ export async function action({ request }) {
       filename,
     });
     pdfUrls.push(url);
+    pdfBuffers.push(pdfBuffer);
+    pdfFilenames.push(filename);
   }
 
   try {
@@ -228,6 +232,8 @@ export async function action({ request }) {
       name,
       collectionName: `Brand tag: ${brandTag}`,
       pdfUrls,
+      pdfBuffers,
+      pdfFilenames,
     });
   } catch (emailErr) {
     console.error(emailErr);

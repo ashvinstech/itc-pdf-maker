@@ -380,6 +380,7 @@ export async function action({ request }) {
       }
 
       const pdfUrls = [];
+      const pdfFilenames = [];
       for (let i = 0; i < pdfBuffers.length; i++) {
         const filename = `catalog-${base}-${timestamp}-${i + 1}.pdf`;
         const { url } = await savePdfLocally({
@@ -387,6 +388,7 @@ export async function action({ request }) {
           filename,
         });
         pdfUrls.push(url);
+        pdfFilenames.push(filename);
       }
 
       try {
@@ -400,6 +402,8 @@ export async function action({ request }) {
           name,
           collectionName,
           pdfUrls,
+          pdfBuffers,
+          pdfFilenames,
         });
       } catch (emailErr) {
         console.error(emailErr);
@@ -468,6 +472,8 @@ export async function action({ request }) {
 
     const chunks = chunkArray(orderedMapped, 100);
     const pdfUrls = [];
+    const pdfBuffers = [];
+    const pdfFilenames = [];
     for (let i = 0; i < chunks.length; i++) {
       const pdfHtml = await buildBrochureHtml({
         products: chunks[i],
@@ -482,6 +488,8 @@ export async function action({ request }) {
         filename,
       });
       pdfUrls.push(url);
+      pdfBuffers.push(pdfBuffer);
+      pdfFilenames.push(filename);
     }
 
     try {
@@ -491,6 +499,8 @@ export async function action({ request }) {
         name,
         collectionName,
         pdfUrls,
+        pdfBuffers,
+        pdfFilenames,
       });
     } catch (emailErr) {
       console.error(emailErr);

@@ -321,25 +321,26 @@ export async function loader({ request }) {
 }
 
 export async function action({ request }) {
+  // Parse form early to get shop for CORS
+  const form = await request.formData().catch(() => null);
+  const shop = form ? normalizeShop(form.get("shop")) : "";
+  const corsHeaders = corsHeadersForRequest(request, shop);
+
   if (request.method !== "POST") {
     return new Response("Method Not Allowed", {
       status: 405,
-      headers: { Allow: "POST, OPTIONS" },
+      headers: { Allow: "POST, OPTIONS", ...corsHeaders },
     });
   }
 
-  const form = await request.formData();
-  const honeypot = (form.get("hp") || "").toString().trim();
+  const honeypot = form && (form.get("hp") || "").toString().trim();
   if (honeypot) {
-    return new Response("OK", { status: 200 });
+    return new Response("OK", { status: 200, headers: corsHeaders });
   }
 
-  const shop = normalizeShop(form.get("shop"));
   if (!shop) {
-    return new Response("Missing or invalid shop", { status: 400 });
+    return new Response("Missing or invalid shop", { status: 400, headers: corsHeaders });
   }
-
-  const corsHeaders = corsHeadersForRequest(request, shop);
 
   try {
     assertShopAllowed(shop);
@@ -461,6 +462,8 @@ export async function action({ request }) {
 
   const chunks = chunkArray(orderedMapped, 100);
   const pdfUrls = [];
+  const pdfBuffers = [];
+  const pdfFilenames = [];
   const timestamp = Math.floor(Date.now() / 1000);
   const tagPart = filenameBase;
 
@@ -478,6 +481,8 @@ export async function action({ request }) {
       filename,
     });
     pdfUrls.push(url);
+    pdfBuffers.push(pdfBuffer);
+    pdfFilenames.push(filename);
   }
 
   try {
@@ -486,6 +491,8 @@ export async function action({ request }) {
       name,
       collectionName: emailContextLabel,
       pdfUrls,
+      pdfBuffers,
+      pdfFilenames,
     });
   } catch (emailErr) {
     console.error(emailErr);
